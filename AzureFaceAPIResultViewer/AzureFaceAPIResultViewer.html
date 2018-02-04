@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<!--
+//|---------------------------------------------------------------|
+//|                     AZURE FACE API RESULT VIEWER              |
+//|---------------------------------------------------------------|
+//|                     Developed by Wonde Tadesse                |
+//|                        Copyright ©2018 - Present              |
+//|---------------------------------------------------------------|
+//|                     AZURE FACE API RESULT VIEWER              |
+//|---------------------------------------------------------------|
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Azure Face API Result Viewer</title>
+    <link rel="stylesheet" type="text/css" href="Content/Site.css">
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="Scripts/jquery-1.6.4.min.js"></script>
+    <script src="Scripts/jquery.signalR-1.0.1.min.js"></script>
+    <script src="/signalR"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#chart").attr("hidden", "hidden");
+            $("#photoDiv").attr("hidden", "hidden");
+            $("#exceptionContainer").attr("hidden", "hidden");
+
+            // Use http to connect to the hub
+            var connection = $.hubConnection('http://realtimemessagebrokerapi.azurewebsites.net/');
+            connection.start().done(function () {
+                $("#status").text("").prepend("Connected.").css("color", "green");
+            });
+
+            //If not connected the use https to connect to the hub
+            if ($("#status").val() != "Connected.")
+            {
+                connection = $.hubConnection('https://realtimemessagebrokerapi.azurewebsites.net/');
+                connection.start().done(function () {
+                    $("#status").text("").prepend("Connected.").css("color", "green");
+                });
+            }
+            var messageBroadCastHub = connection.createHubProxy('BroadCastHub');
+            
+            // Subscribe onChartProduced SignalR event
+            processOnChartProducedEvent(messageBroadCastHub);
+
+            // Subscribe onPhotoDetected SignalR event
+            processOnPhotoDetectedEvent(messageBroadCastHub);
+
+            // Subscribe onException SignalR event
+            processOnExceptionEvent(messageBroadCastHub);
+
+            var today = new Date();
+            var year = today.getFullYear();
+            $('#copyright').html('&copy;').append(year).append(' - Microsoft Deep Azure');
+        });
+
+        // Subscribe onChartProduced SignalR event
+        function processOnChartProducedEvent(messageBroadCastHub) {
+            var eventName = 'onChartProduced';
+            messageBroadCastHub.on(eventName, function (message) {
+                var jsonObject = JSON.parse(message);
+                
+                if (jsonObject.NoOfMale != undefined &&
+                    jsonObject.NoOfFemale != undefined) {
+                    plotGender(jsonObject);
+                }
+                else if (jsonObject.NoOfAdolescence != undefined &&
+                    jsonObject.NoOfYoungAdult != undefined &&
+                    jsonObject.NoOfMiddleAgedAdult != undefined &&
+                    jsonObject.NoOfOldAdult != undefined) {
+                    plotAgeGroup(jsonObject);
+                }
+            });
+        }
+
+        // Subscribe onPhotoDetected SignalR event
+        function processOnPhotoDetectedEvent(messageBroadCastHub) {
+            var eventName = 'onPhotoDetected';
+            messageBroadCastHub.on(eventName, function (message) {
+                var jsonObject = JSON.parse(message);
+                showIdentifiedFace(jsonObject);
+            });
+        }
+
+        // Subscribe onException SignalR event
+        function processOnExceptionEvent(messageBroadCastHub) {
+            var eventName = 'onException';
+            messageBroadCastHub.on(eventName, function (message) {
+                var jsonObject = JSON.parse(message);
+                $("#exceptionContainer").removeAttr("hidden");
+                $("#exceptionContainer").text("").prepend(jsonObject.ErrorMessage);
+                $("#photoDiv").attr("hidden", "hidden");
+                $("#chart").attr("hidden", "hidden");
+            });
+        }
+
+        // Plot Gender chart
+        function plotGender(genderChart) {
+            $("#chart").removeAttr("hidden");
+            $("#exceptionContainer").attr("hidden", "hidden");
+            $("#photoDiv").attr("hidden", "hidden");
+            var data = [
+                {
+                    x: ["Male", "Female"],
+                    y: [genderChart.NoOfMale, genderChart.NoOfFemale],
+                    type: genderChart.Type
+                }
+            ];
+            Plotly.newPlot('chart', data);
+        }
+
+        //Plot Age Group chart
+        function plotAgeGroup(ageGroupChart) {
+            $("#chart").removeAttr("hidden");
+            $("#exceptionContainer").attr("hidden", "hidden");
+            $("#photoDiv").attr("hidden", "hidden");
+            var data = [
+                {
+                    labels: ["Adolescence", "Young Adult", "Middle Aged Adult", "Old Adult"],
+                    values: [ageGroupChart.NoOfAdolescence, ageGroupChart.NoOfYoungAdult, ageGroupChart.NoOfMiddleAgedAdult, ageGroupChart.NoOfOldAdult],
+                    type: ageGroupChart.Type
+                }
+            ];
+            Plotly.newPlot('chart', data);
+        }
+
+        // Show identified face
+        function showIdentifiedFace(identifyFace) {
+            $("#chart").attr("hidden", "hidden");
+            $("#photoDiv").attr("hidden", "hidden");
+            $("#exceptionContainer").attr("hidden", "hidden");
+            if (identifyFace.IsFound != undefined &&
+                identifyFace.IsFound == true) {
+                var imgValue = identifyFace.Base64ImageString;
+                $("#imageContainer").append(imgValue.replace(new RegExp('_', 'g'), "+")); // replace any "_" with "+"
+
+                if (identifyFace.IsCompleted == true) {
+                    $("#photoDiv").removeAttr("hidden");
+                    var imageSource = "data:image/png;base64, " + $("#imageContainer").val();
+                    $("#photo").attr("src", imageSource);
+                    $("#photoName").text("").append(identifyFace.PersonName).css("font-weight", "Bold").append(" is identified !");
+                    $("#imageContainer").text("");
+                }
+            }
+        }
+    </script>
+</head>
+<body class="container body-content" style="background-color:white">
+    <div class="jumbotron" style="background-color:#007FFF">
+        <h2 style="color:white;text-align:center">Azure Face API Result Viewer</h2>
+    </div>
+    <div style="font-size:medium;background-color:lightgray;">
+        <table style="width: auto;margin-right: 0px;margin-left: auto;">
+            <tr>
+                <td style="vertical-align:top;">Realtime Message Broker(RTMB) Service Connection status : </td>
+                <td>
+                    <div id="status" style="color:red">Not Connected</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="border:inset;width:100%;height:500px">
+        <textarea id="imageContainer" hidden="hidden"></textarea>
+        <div id="exceptionContainer" style="color:red;font-size:medium"></div>
+        <div id="photoDiv">
+            <table>
+                <tr>
+                    <td style="vertical-align:top">
+                        <img id="photo"/>
+                    </td>
+                    <td style="vertical-align:top">
+                        <div id="photoName" style="color:green"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="chart"></div>
+    </div>
+    <div id="copyright" style="text-align:center;position:fixed;bottom:0;" />
+</body>
+</html>

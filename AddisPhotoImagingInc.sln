@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFaceAPIWPFClient", "AzureFaceAPISample\AzureFaceAPIWPFClient.csproj", "{1C262A89-4FC1-4F35-B3D2-D881F3D12954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFaceAPIResultViewer", "AzureFaceAPIResultViewer\AzureFaceAPIResultViewer.csproj", "{16BB6A96-056A-4D4A-8DB5-35454508E26C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealTimeMessageBroker", "RealTimeMessageBroker\RealTimeMessageBroker.csproj", "{1005099F-4AE4-43CC-98EE-054CE57DE209}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1FAE3566-EE21-4B0C-99C1-AB0A284D72E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C262A89-4FC1-4F35-B3D2-D881F3D12954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C262A89-4FC1-4F35-B3D2-D881F3D12954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C262A89-4FC1-4F35-B3D2-D881F3D12954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C262A89-4FC1-4F35-B3D2-D881F3D12954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16BB6A96-056A-4D4A-8DB5-35454508E26C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16BB6A96-056A-4D4A-8DB5-35454508E26C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16BB6A96-056A-4D4A-8DB5-35454508E26C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16BB6A96-056A-4D4A-8DB5-35454508E26C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1005099F-4AE4-43CC-98EE-054CE57DE209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1005099F-4AE4-43CC-98EE-054CE57DE209}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1005099F-4AE4-43CC-98EE-054CE57DE209}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1005099F-4AE4-43CC-98EE-054CE57DE209}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FAE3566-EE21-4B0C-99C1-AB0A284D72E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAE3566-EE21-4B0C-99C1-AB0A284D72E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAE3566-EE21-4B0C-99C1-AB0A284D72E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAE3566-EE21-4B0C-99C1-AB0A284D72E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

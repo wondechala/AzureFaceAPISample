@@ -3,3 +3,11 @@
 ################################################################################
 
 /AzureFaceAPIResultViewer/bin
+/AzureFaceAPIResultViewer/obj
+/AzureFaceAPISample/bin
+/AzureFaceAPISample/obj
+/Common/bin
+/Common/obj
+/packages
+/RealTimeMessageBroker/bin
+/RealTimeMessageBroker/obj
